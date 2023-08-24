@@ -1,0 +1,11 @@
+name = "AOC"
+uuid = "e593d766-7133-11ed-0abd-8d949b374692"
+
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Cthulhu = "f68482b8-f384-11e8-15f7-abe071a5a75f"
+Debugger = "31a5f54b-26ea-5ae9-a837-f05ce5417438"
+Infiltrator = "5903a43b-9cc3-4c30-8d17-598619ec4e9b"
+JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
