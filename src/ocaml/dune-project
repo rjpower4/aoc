@@ -1,0 +1,10 @@
+(lang dune 2.0)
+(name aoc)
+(generate_opam_files true)
+(authors "Rolfe Power <rolfepower4@gmail.com>")
+(source (github rjpower4/aoc))
+
+(package
+  (name aoc)
+  (synopsis "Advent of Code"))
+

@@ -1,15 +1,13 @@
 using Test
+using AOC
 
 function tests()
 end
 
 function main()
-    if length(ARGS) > 0
-        path = ARGS[1]
-        lines = readlines(path)
-    else
-        tests()
-    end
+    tests()
+    path = AOC.data_dir("XXXX", "dayXX.txt")
+    lines = readlines(path)
 end
 
 main()
