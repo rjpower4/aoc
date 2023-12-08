@@ -3,6 +3,7 @@ uuid = "e593d766-7133-11ed-0abd-8d949b374692"
 
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 Cthulhu = "f68482b8-f384-11e8-15f7-abe071a5a75f"
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Debugger = "31a5f54b-26ea-5ae9-a837-f05ce5417438"
