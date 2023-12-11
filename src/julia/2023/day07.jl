@@ -54,101 +54,28 @@ end
 
 function score_wild(h::Hand)
     nj = get(h.counts, 'J', 0)
+    cc = copy(h.counts)
+    delete!(cc, 'J')
 
-    if nj == 0
-        return score(h)
+    mk = if isempty(keys(cc))
+        'K'
+    else
+        first(keys(cc))
     end
-
-    # Remove the jokers
-    d = typeof(h.counts)()
-    for (k, v) in h.counts
-        k != 'J' || continue
-        d[k] = v
-    end
-
-    cnts = counts(d)
-
-    # Can make 4/5 of a kind 
-    for k in 1:4
-        if cnts[k] > 0 && (k + nj) >= 5
-            return 7
-        elseif cnts[k] > 0 && (k + nj) >= 4
-            return 6 
+    m = 0
+    for (k, v) in cc
+        if v > m
+            mk = k
+            m = v
         end
     end
 
-    # Full House 
-    if cnts[3] > 0
-        if cnts[1] > 0
-            return 5
-        elseif nj > 1
-            return 5
-        end
-    end
+    cc[mk] = m + nj
 
-    # Three of a kind 
-    if cnts[2] > 0
-        return 4
-    elseif nj > 1
-        return 4
-    end
-
-    if nj > 1
-        return 3
-    end
-
-    return 2
+    @show hh = Hand(h.raw, cc, h.bid)
+    return score(hh)
 end
 
-
-composition_count(n, k) = binomial(n + k - 1, n)
-
-function next_composition!(x)
-    kc = length(x)
-    i = 0
-
-    for j in kc:-1:1
-        if 0 < x[j]
-            i = j
-            break
-        end
-    end
-
-    if i == 0
-        x[kc] = 1
-        return
-    end
-
-    t = zero(eltype(x))
-    im1 = 0
-
-    if i == 1
-        t = x[1] + 1
-        im1 = kc
-    elseif 1 < i
-        t = x[i]
-        im1 = i - 1
-    end
-
-    x[i] = 0
-    x[im1] = x[im1] + 1
-    x[kc] = x[kc] + t - 1
-
-    return nothing
-end
-
-function compositions!(xc)
-    kc = size(xc, 1)
-    kc > 0 || error("invalid kc dimension")
-    xc[:, 1] .= 0.0
-
-    for k in 2:size(xc, 2)
-        xc[:, k] .= xc[:, k-1]
-        next_composition!(view(xc, :, k))
-    end
-
-    return nothing
-end
 
 
 function is_lt(a::ScoredHand, b::ScoredHand; wild=false)
@@ -190,17 +117,18 @@ function is_lt(a::ScoredHand, b::ScoredHand; wild=false)
 end
 
 
-function main2()
-    path = AOC.data_dir("2023", "day07.txt")
+function main2(test=false)
+    path = AOC.data_dir("2023", test ? "day07-test.txt" : "day07.txt")
     hands = Hand.(eachline(path))
-    shands = [ScoredHand(score(h), h) for h in hands]
+    shands = [ScoredHand(score(h), h) for h in copy(hands)]
     sort!(shands; lt=is_lt)
     p1 = sum(x -> x[1] * x[2].hand.bid, enumerate(shands))
 
     println("Part 1: $p1")
 
+    islt2(a, b) = is_lt(a, b; wild=true)
     shands2 = [ScoredHand(score_wild(h), h) for h in hands]
-    sort!(shands2; lt=is_lt)
+    sort!(shands2; lt=islt2)
     p2 = sum(x -> x[1] * x[2].hand.bid, enumerate(shands2))
     println("Part 2: $p2")
 

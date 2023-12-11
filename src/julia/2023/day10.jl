@@ -31,10 +31,8 @@ const TRANSFORM = Dict(
 
 valid_index(i, j, m) = i > 0 && i <= size(m, 1) && j > 0 && j <= size(m, 2)
 
-
 function read_map(path)
     lines = readlines(path)
-
     m = fill('.', length(lines), length(lines[1]))
 
     for (i, l) in enumerate(lines)
@@ -68,34 +66,27 @@ function main()
 
     count = 1
     while c != s
-        if !isnothing(path)
-            path[c...] = true
-        end
-
+        path[c...] = true
         count += 1
         c_d = TRANSFORM[(c_d, map[c...])]
         c = c .+ DIRECTIONS[c_d]
     end
-
     p1 = div(count, 2)
-
-    println("Part 1: $(p1)")
-
 
     # Count vertical lines crossing
     p2 = 0
+    verts = length(intersect([:up, :down], v_dirs)) > 0 ? "|JLS" : "|JL"
     for i in axes(path, 1)
-        inn = false
+        inside = false
         for j in axes(path, 2)
-            if path[i, j]
-                if map[i, j] in "|JL" || (map[i, j] == 'S' && (:up in v_dirs || :down in v_dirs))
-                    inn = !inn
-                end
+            if path[i, j] && map[i, j] in verts
+                inside = !inside
             else
-                p2 += inn ? 1 : 0
+                p2 += inside ? 1 : 0
             end
         end
     end
 
-    println("Part 2: $p2")
+    println("Part 1: $(p1)")
+    println("Part 2: $(p2)")
 end
